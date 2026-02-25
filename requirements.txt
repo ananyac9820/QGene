@@ -1,0 +1,18 @@
+
+---
+
+# 📦 requirements.txt
+
+If you want a **clean, minimal version** (recommended instead of full pip freeze):
+
+```txt
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+shap==0.41.0
+qiskit
+qiskit-machine-learning
+flask
+jupyter
