@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QGene - Genetic Mutation Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-q">Q</span>Gene
+            </div>
+            <p class="tagline">Quantum-Classical Hybrid Mutation Prediction</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('single')">Single Prediction</button>
+                <button class="tab-btn" onclick="switchTab('batch')">Batch Upload</button>
+                <button class="tab-btn" onclick="switchTab('samples')">Sample Files</button>
+            </div>
+
+            <!-- Single Prediction Tab -->
+            <div id="single-tab" class="tab-content active">
+                <form id="prediction-form" class="prediction-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="gene">Gene</label>
+                            <select id="gene" name="gene" required>
+                                <option value="BRCA1">BRCA1</option>
+                                <option value="BRCA2">BRCA2</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="position">Position</label>
+                            <input type="number" id="position" name="position" placeholder="e.g., 5382" required>
+                            <small>Position in the gene sequence</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mutation_type">Mutation Type</label>
+                            <select id="mutation_type" name="mutation_type" required>
+                                <option value="Missense">Missense</option>
+                                <option value="Nonsense">Nonsense</option>
+                                <option value="Frameshift">Frameshift</option>
+                                <option value="Silent">Silent</option>
+                                <option value="Splice Site">Splice Site</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aa_change">Amino Acid Change</label>
+                            <input type="text" id="aa_change" name="aa_change" placeholder="e.g., C61G" required>
+                            <small>Format: Original-Position-New (e.g., C61G)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="conservation_score">Conservation Score</label>
+                            <input type="number" id="conservation_score" name="conservation_score" 
+                                   step="0.01" min="0" max="1" placeholder="0.85" required>
+                            <small>Value between 0 and 1 (higher = more conserved)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="allele_frequency">Allele Frequency</label>
+                            <input type="number" id="allele_frequency" name="allele_frequency" 
+                                   step="0.0001" min="0" max="1" placeholder="0.0012" required>
+                            <small>Population frequency (0 to 1)</small>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <span id="predict-btn-text">Predict Mutation</span>
+                        <span id="predict-spinner" class="spinner" style="display: none;"></span>
+                    </button>
+                </form>
+
+                <!-- Results Section -->
+                <div id="results" class="results" style="display: none;">
+                    <h2>Prediction Results</h2>
+                    
+                    <div class="result-main">
+                        <div class="prediction-badge" id="prediction-badge">
+                            <span id="prediction-text"></span>
+                        </div>
+                        <div class="confidence">
+                            <span class="confidence-label">Confidence:</span>
+                            <span class="confidence-value" id="confidence-value"></span>
+                        </div>
+                    </div>
+
+                    <div class="model-comparison">
+                        <h3>Model Comparison</h3>
+                        <div class="comparison-grid">
+                            <div class="model-card">
+                                <h4>Classical ML</h4>
+                                <div class="model-scores">
+                                    <div class="score-item">
+                                        <span class="score-label">Random Forest:</span>
+                                        <span class="score-value" id="rf-score"></span>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-label">SVM:</span>
+                                        <span class="score-value" id="svm-score"></span>
+                                    </div>
+                                    <div class="score-item score-avg">
+                                        <span class="score-label">Average:</span>
+                                        <span class="score-value" id="classical-avg"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="model-card">
+                                <h4>Quantum ML</h4>
+                                <div class="model-scores">
+                                    <div class="score-item">
+                                        <span class="score-label">VQC:</span>
+                                        <span class="score-value" id="vqc-score"></span>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-label">QSVM:</span>
+                                        <span class="score-value" id="qsvm-score"></span>
+                                    </div>
+                                    <div class="score-item score-avg">
+                                        <span class="score-label">Average:</span>
+                                        <span class="score-value" id="quantum-avg"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="model-card hybrid">
+                                <h4>Hybrid Ensemble</h4>
+                                <div class="hybrid-score">
+                                    <span class="score-value" id="hybrid-score"></span>
+                                </div>
+                                <p class="hybrid-desc">70% Classical + 30% Quantum</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="explanation-section">
+                        <h3>Feature Importance (SHAP)</h3>
+                        <div id="explanation-list" class="explanation-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Batch Upload Tab -->
+            <div id="batch-tab" class="tab-content">
+                <div class="batch-upload">
+                    <h3>Upload CSV File for Batch Prediction</h3>
+                    <p class="info-text">Upload a CSV file with columns: gene, position, mutation_type, aa_change, conservation_score, allele_frequency</p>
+                    
+                    <form id="batch-form" class="batch-form">
+                        <div class="file-upload-area" id="file-upload-area">
+                            <input type="file" id="csv-file" name="file" accept=".csv" required>
+                            <label for="csv-file" class="file-label">
+                                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <span>Click to upload or drag and drop</span>
+                                <span class="file-name" id="file-name"></span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-primary">Process Batch</button>
+                    </form>
+
+                    <div id="batch-results" class="batch-results" style="display: none;">
+                        <h3>Batch Results</h3>
+                        <div class="batch-summary" id="batch-summary"></div>
+                        <div class="batch-table-container">
+                            <table id="batch-table" class="batch-table"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sample Files Tab -->
+            <div id="samples-tab" class="tab-content">
+                <div class="samples-section">
+                    <h3>Download Sample Input Files</h3>
+                    <p class="info-text">Use these sample files to test the system or as templates for your own data</p>
+                    
+                    <div class="samples-grid">
+                        <div class="sample-card">
+                            <h4>Single Pathogenic Example</h4>
+                            <p>CSV with one known pathogenic mutation</p>
+                            <a href="/download-sample/single_pathogenic" class="btn-secondary" download>Download</a>
+                        </div>
+
+                        <div class="sample-card">
+                            <h4>Single Benign Example</h4>
+                            <p>CSV with one known benign mutation</p>
+                            <a href="/download-sample/single_benign" class="btn-secondary" download>Download</a>
+                        </div>
+
+                        <div class="sample-card">
+                            <h4>Batch Mixed (10 variants)</h4>
+                            <p>Mix of pathogenic and benign mutations</p>
+                            <a href="/download-sample/batch_mixed" class="btn-secondary" download>Download</a>
+                        </div>
+
+                        <div class="sample-card">
+                            <h4>BRCA1 Variants (5 samples)</h4>
+                            <p>BRCA1-specific mutations</p>
+                            <a href="/download-sample/batch_brca1" class="btn-secondary" download>Download</a>
+                        </div>
+
+                        <div class="sample-card">
+                            <h4>BRCA2 Variants (5 samples)</h4>
+                            <p>BRCA2-specific mutations</p>
+                            <a href="/download-sample/batch_brca2" class="btn-secondary" download>Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>QGene v1.0 | Quantum-Classical Hybrid Machine Learning for Genetic Mutation Prediction</p>
+            <p class="disclaimer">⚠️ For research purposes only. Not for clinical diagnosis.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
