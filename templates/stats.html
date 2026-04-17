@@ -1,0 +1,73 @@
+<!-- stats.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QGene — Research & Stats</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="with-sidebar">
+{% include 'sidebar.html' %}
+<main class="main">
+  <div class="topbar"><span class="topbar-title">Research & Statistics</span><div class="topbar-badge"><span class="pulse-dot"></span>4 Models Active</div></div>
+  <div class="page-content">
+    <div class="page-header"><h1>Model Performance & Research Findings</h1><p>Complete comparison analysis across classical and quantum approaches</p></div>
+
+    <div class="stats-overview">
+      <div class="stat-card"><div class="big-num">94.1%</div><div class="big-label">Hybrid ROC-AUC</div><div class="big-sub">Best overall model</div></div>
+      <div class="stat-card"><div class="big-num">87.7%</div><div class="big-label">RF Accuracy</div><div class="big-sub">26,153 training samples</div></div>
+      <div class="stat-card"><div class="big-num">86.0%</div><div class="big-label">QSVM Accuracy</div><div class="big-sub">Only 500 training samples</div></div>
+      <div class="stat-card"><div class="big-num">52×</div><div class="big-label">Data Efficiency</div><div class="big-sub">Quantum vs Classical</div></div>
+    </div>
+
+    <div class="section-title">Complete metrics comparison</div>
+    <div class="metrics-table-wrap" style="margin-top:16px">
+      <table class="metrics-table">
+        <thead><tr><th>Model</th><th>Type</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1-Score</th><th>ROC-AUC</th><th>Train Samples</th></tr></thead>
+        <tbody>
+          <tr><td class="model-name">Random Forest</td><td>Classical</td><td>87.71%</td><td>94.03%</td><td>81.18%</td><td>87.13%</td><td class="good">92.73%</td><td>26,153</td></tr>
+          <tr><td class="model-name">SVM</td><td>Classical</td><td>86.23%</td><td>93.65%</td><td>78.46%</td><td>85.38%</td><td>86.60%</td><td>26,153</td></tr>
+          <tr><td class="model-name">QSVM</td><td>Quantum</td><td>86.00%</td><td>93.33%</td><td>79.25%</td><td>85.17%</td><td>86.02%</td><td>500</td></tr>
+          <tr><td class="model-name">VQC</td><td>Quantum</td><td>78.20%</td><td>—</td><td>—</td><td>75.51%</td><td>84.74%</td><td>200</td></tr>
+          <tr class="best-row"><td class="model-name">Hybrid Ensemble ★</td><td>Hybrid</td><td>86.60%</td><td>—</td><td>—</td><td>86.01%</td><td class="good">94.12%</td><td>Ensemble</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);margin-bottom:28px">All models evaluated on shared 500-sample stratified test set. Classical models trained on full 26,153-sample training set.</p>
+
+    <div class="section-title">Key finding: Quantum advantage in low-data regime</div>
+    <div class="card" style="margin:16px 0 28px;padding:20px 24px">
+      <p style="font-size:14px;color:var(--text-secondary);line-height:1.8">QSVM achieves <strong style="color:var(--navy)">statistically equivalent performance</strong> to classical SVM (86.0% vs 86.2%) while using <strong style="color:var(--navy)">52× fewer training samples</strong>. In clinical settings where labelled variant data is scarce, this quantum data efficiency represents a meaningful advantage. The ZZFeatureMap kernel computes similarities in a high-dimensional Hilbert space that classical kernels cannot efficiently replicate.</p>
+    </div>
+
+    <div class="section-title">Performance visualisations</div>
+    <div class="figures-grid" style="margin-top:16px">
+      <div class="figure-card">
+        <img src="{{ url_for('static', filename='../visualizations/fig1_performance_comparison.png') }}" alt="Performance comparison bar charts" onerror="this.style.display='none'">
+        <div class="figure-caption"><h4>Figure 1 — Performance Comparison</h4><p>Accuracy, F1, ROC-AUC, and AUPRC across all four models on shared test set</p></div>
+      </div>
+      <div class="figure-card">
+        <img src="{{ url_for('static', filename='../visualizations/fig2_roc_curves.png') }}" alt="ROC curves overlay" onerror="this.style.display='none'">
+        <div class="figure-caption"><h4>Figure 2 — ROC Curves</h4><p>Receiver operating characteristic curves with AUC values. Solid = classical, dashed = quantum</p></div>
+      </div>
+      <div class="figure-card">
+        <img src="{{ url_for('static', filename='../visualizations/fig4_quantum_advantage.png') }}" alt="Quantum advantage learning curve" onerror="this.style.display:'none'">
+        <div class="figure-caption"><h4>Figure 3 — Quantum Advantage (Key Finding)</h4><p>Classical model accuracy vs training set size. QSVM horizontal line shows competitive performance with far fewer samples</p></div>
+      </div>
+      <div class="figure-card">
+        <img src="{{ url_for('static', filename='../visualizations/fig5_kernel_heatmap.png') }}" alt="Quantum kernel heatmap" onerror="this.style.display='none'">
+        <div class="figure-caption"><h4>Figure 4 — Quantum Kernel Similarity</h4><p>ZZFeatureMap kernel matrix showing inter-class separability in Hilbert space</p></div>
+      </div>
+      <div class="figure-card">
+        <img src="{{ url_for('static', filename='../visualizations/fig3_confusion_matrices.png') }}" alt="Confusion matrices" onerror="this.style.display:'none'">
+        <div class="figure-caption"><h4>Figure 5 — Confusion Matrices</h4><p>True/false positive and negative rates for all four models</p></div>
+      </div>
+      <div class="figure-card">
+        <img src="{{ url_for('static', filename='../visualizations/fig6_summary.png') }}" alt="Summary figure" onerror="this.style.display='none'">
+        <div class="figure-caption"><h4>Figure 6 — Complete Summary</h4><p>Publication-ready five-panel summary including hybrid weight optimisation</p></div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QGene — Quantum-Classical BRCA Variant Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="landing-body">
+
+<!-- Nav -->
+<nav class="landing-nav">
+  <div class="landing-nav-logo">
+    <span class="logo-q">Q</span><span style="color:var(--navy)">Gene</span>
+  </div>
+  <div class="landing-nav-links">
+    <a href="/app">Predict</a>
+    <a href="/about">Disease Info</a>
+    <a href="/dataset">Dataset</a>
+    <a href="/stats">Research</a>
+    <a href="/news">News</a>
+    <a href="/contact">Contact</a>
+    <a href="/app" class="nav-cta">Try the Tool →</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      First hybrid classical-quantum system for BRCA variants
+    </div>
+    <h1>Predict BRCA Variant<br><span>Pathogenicity</span> with<br>Quantum Precision</h1>
+    <p>QGene combines classical machine learning with quantum kernel methods to classify BRCA1 and BRCA2 mutations. Research-grade, explainable, and built on 37,362 ClinVar variants.</p>
+    <div class="hero-btns">
+      <a href="/app" class="btn-hero-primary">Run a Prediction →</a>
+      <a href="/stats" class="btn-hero-secondary">View Research</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats strip -->
+<div class="stats-strip">
+  <div class="strip-stat"><div class="strip-num">37,362</div><div class="strip-lbl">Variants Trained</div></div>
+  <div class="strip-sep"></div>
+  <div class="strip-stat"><div class="strip-num">94.1%</div><div class="strip-lbl">Hybrid ROC-AUC</div></div>
+  <div class="strip-sep"></div>
+  <div class="strip-stat"><div class="strip-num">4</div><div class="strip-lbl">ML Models</div></div>
+  <div class="strip-sep"></div>
+  <div class="strip-stat"><div class="strip-num">Qiskit 2.3</div><div class="strip-lbl">Quantum Framework</div></div>
+  <div class="strip-sep"></div>
+  <div class="strip-stat"><div class="strip-num">SHAP</div><div class="strip-lbl">Explainability</div></div>
+</div>
+
+<!-- How it works -->
+<section class="landing-section">
+  <div class="section-label">How it works</div>
+  <h2 class="section-h2">Three steps to variant classification</h2>
+  <p class="section-sub">QGene runs your variant through four models simultaneously — two classical, one quantum, one hybrid — and returns a single explainable result.</p>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-num">1</div>
+      <h3>Enter variant details</h3>
+      <p>Input the gene (BRCA1/BRCA2), genomic position, mutation type, and amino acid change. No account required.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">2</div>
+      <h3>Hybrid analysis runs</h3>
+      <p>Random Forest and SVM provide classical predictions. QSVM uses a ZZFeatureMap quantum kernel for a fundamentally different geometric representation. All four outputs are weighted into a hybrid ensemble.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">3</div>
+      <h3>Download your report</h3>
+      <p>Get a PATHOGENIC or BENIGN classification with confidence score, per-model breakdown, SHAP feature importance, and a downloadable PDF report.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Trust signals -->
+<section class="landing-section alt-bg">
+  <div class="section-label">Built for researchers</div>
+  <h2 class="section-h2">Research-grade from the ground up</h2>
+  <p class="section-sub">Every design decision in QGene prioritises scientific credibility over simplicity.</p>
+  <div class="trust-grid">
+    <div class="trust-card">
+      <div class="trust-icon">🧬</div>
+      <h4>ClinVar Data</h4>
+      <p>Trained on NCBI ClinVar — the gold standard for variant pathogenicity annotations</p>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon">⚛️</div>
+      <h4>Real Quantum ML</h4>
+      <p>QSVM uses ZZFeatureMap with entanglement — not a simulation of quantum, actual quantum kernel computation</p>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon">📊</div>
+      <h4>SHAP Explainability</h4>
+      <p>Every prediction includes feature-level SHAP values so you understand exactly why the model classified a variant</p>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon">📄</div>
+      <h4>PDF Reports</h4>
+      <p>Download a structured analysis report for every prediction — suitable for research documentation</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="landing-cta">
+  <h2>Ready to classify your variant?</h2>
+  <p>Free to use. No account required. Results in under 5 seconds.</p>
+  <a href="/app" class="btn-hero-primary">Open the Prediction Tool →</a>
+</div>
+
+<!-- Footer -->
+<footer class="landing-footer">
+  <div><span class="logo-q" style="font-family:var(--font-display);font-size:16px">Q</span><span style="color:rgba(255,255,255,0.45);font-family:var(--font-display)">Gene</span> v1.0 · Quantum-Classical Hybrid ML for BRCA Variant Classification</div>
+  <div style="color:rgba(255,255,255,0.3)">⚠ For research purposes only. Not for clinical diagnosis.</div>
+</footer>
+
+</body>
+</html>

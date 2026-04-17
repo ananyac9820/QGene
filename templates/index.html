@@ -3,234 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QGene - Genetic Mutation Predictor</title>
+    <title>QGene — Quantum-Classical Mutation Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <span class="logo-q">Q</span>Gene
-            </div>
-            <p class="tagline">Quantum-Classical Hybrid Mutation Prediction</p>
-        </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Tabs -->
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('single')">Single Prediction</button>
-                <button class="tab-btn" onclick="switchTab('batch')">Batch Upload</button>
-                <button class="tab-btn" onclick="switchTab('samples')">Sample Files</button>
-            </div>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <span class="logo-q">Q</span><span class="logo-gene">Gene</span>
+    </div>
+    <p class="sidebar-tagline">Quantum-Classical<br>Hybrid Mutation<br>Prediction</p>
 
-            <!-- Single Prediction Tab -->
-            <div id="single-tab" class="tab-content active">
-                <form id="prediction-form" class="prediction-form">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="gene">Gene</label>
-                            <select id="gene" name="gene" required>
-                                <option value="BRCA1">BRCA1</option>
-                                <option value="BRCA2">BRCA2</option>
-                            </select>
-                        </div>
+    <nav class="sidebar-nav">
+        <button class="nav-item active" onclick="switchTab('single', this)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            Single Prediction
+        </button>
+        <button class="nav-item" onclick="switchTab('batch', this)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Batch Upload
+        </button>
+        <button class="nav-item" onclick="switchTab('samples', this)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Sample Files
+        </button>
+    </nav>
 
-                        <div class="form-group">
-                            <label for="position">Position</label>
-                            <input type="number" id="position" name="position" placeholder="e.g., 5382" required>
-                            <small>Position in the gene sequence</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="mutation_type">Mutation Type</label>
-                            <select id="mutation_type" name="mutation_type" required>
-                                <option value="Missense">Missense</option>
-                                <option value="Nonsense">Nonsense</option>
-                                <option value="Frameshift">Frameshift</option>
-                                <option value="Silent">Silent</option>
-                                <option value="Splice Site">Splice Site</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="aa_change">Amino Acid Change</label>
-                            <input type="text" id="aa_change" name="aa_change" placeholder="e.g., C61G" required>
-                            <small>Format: Original-Position-New (e.g., C61G)</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="conservation_score">Conservation Score</label>
-                            <input type="number" id="conservation_score" name="conservation_score" 
-                                   step="0.01" min="0" max="1" placeholder="0.85" required>
-                            <small>Value between 0 and 1 (higher = more conserved)</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="allele_frequency">Allele Frequency</label>
-                            <input type="number" id="allele_frequency" name="allele_frequency" 
-                                   step="0.0001" min="0" max="1" placeholder="0.0012" required>
-                            <small>Population frequency (0 to 1)</small>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-primary">
-                        <span id="predict-btn-text">Predict Mutation</span>
-                        <span id="predict-spinner" class="spinner" style="display: none;"></span>
-                    </button>
-                </form>
-
-                <!-- Results Section -->
-                <div id="results" class="results" style="display: none;">
-                    <h2>Prediction Results</h2>
-                    
-                    <div class="result-main">
-                        <div class="prediction-badge" id="prediction-badge">
-                            <span id="prediction-text"></span>
-                        </div>
-                        <div class="confidence">
-                            <span class="confidence-label">Confidence:</span>
-                            <span class="confidence-value" id="confidence-value"></span>
-                        </div>
-                    </div>
-
-                    <div class="model-comparison">
-                        <h3>Model Comparison</h3>
-                        <div class="comparison-grid">
-                            <div class="model-card">
-                                <h4>Classical ML</h4>
-                                <div class="model-scores">
-                                    <div class="score-item">
-                                        <span class="score-label">Random Forest:</span>
-                                        <span class="score-value" id="rf-score"></span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span class="score-label">SVM:</span>
-                                        <span class="score-value" id="svm-score"></span>
-                                    </div>
-                                    <div class="score-item score-avg">
-                                        <span class="score-label">Average:</span>
-                                        <span class="score-value" id="classical-avg"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="model-card">
-                                <h4>Quantum ML</h4>
-                                <div class="model-scores">
-                                    <div class="score-item">
-                                        <span class="score-label">VQC:</span>
-                                        <span class="score-value" id="vqc-score"></span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span class="score-label">QSVM:</span>
-                                        <span class="score-value" id="qsvm-score"></span>
-                                    </div>
-                                    <div class="score-item score-avg">
-                                        <span class="score-label">Average:</span>
-                                        <span class="score-value" id="quantum-avg"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="model-card hybrid">
-                                <h4>Hybrid Ensemble</h4>
-                                <div class="hybrid-score">
-                                    <span class="score-value" id="hybrid-score"></span>
-                                </div>
-                                <p class="hybrid-desc">70% Classical + 30% Quantum</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="explanation-section">
-                        <h3>Feature Importance (SHAP)</h3>
-                        <div id="explanation-list" class="explanation-list"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Batch Upload Tab -->
-            <div id="batch-tab" class="tab-content">
-                <div class="batch-upload">
-                    <h3>Upload CSV File for Batch Prediction</h3>
-                    <p class="info-text">Upload a CSV file with columns: gene, position, mutation_type, aa_change, conservation_score, allele_frequency</p>
-                    
-                    <form id="batch-form" class="batch-form">
-                        <div class="file-upload-area" id="file-upload-area">
-                            <input type="file" id="csv-file" name="file" accept=".csv" required>
-                            <label for="csv-file" class="file-label">
-                                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="17 8 12 3 7 8"></polyline>
-                                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                                </svg>
-                                <span>Click to upload or drag and drop</span>
-                                <span class="file-name" id="file-name"></span>
-                            </label>
-                        </div>
-                        <button type="submit" class="btn-primary">Process Batch</button>
-                    </form>
-
-                    <div id="batch-results" class="batch-results" style="display: none;">
-                        <h3>Batch Results</h3>
-                        <div class="batch-summary" id="batch-summary"></div>
-                        <div class="batch-table-container">
-                            <table id="batch-table" class="batch-table"></table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sample Files Tab -->
-            <div id="samples-tab" class="tab-content">
-                <div class="samples-section">
-                    <h3>Download Sample Input Files</h3>
-                    <p class="info-text">Use these sample files to test the system or as templates for your own data</p>
-                    
-                    <div class="samples-grid">
-                        <div class="sample-card">
-                            <h4>Single Pathogenic Example</h4>
-                            <p>CSV with one known pathogenic mutation</p>
-                            <a href="/download-sample/single_pathogenic" class="btn-secondary" download>Download</a>
-                        </div>
-
-                        <div class="sample-card">
-                            <h4>Single Benign Example</h4>
-                            <p>CSV with one known benign mutation</p>
-                            <a href="/download-sample/single_benign" class="btn-secondary" download>Download</a>
-                        </div>
-
-                        <div class="sample-card">
-                            <h4>Batch Mixed (10 variants)</h4>
-                            <p>Mix of pathogenic and benign mutations</p>
-                            <a href="/download-sample/batch_mixed" class="btn-secondary" download>Download</a>
-                        </div>
-
-                        <div class="sample-card">
-                            <h4>BRCA1 Variants (5 samples)</h4>
-                            <p>BRCA1-specific mutations</p>
-                            <a href="/download-sample/batch_brca1" class="btn-secondary" download>Download</a>
-                        </div>
-
-                        <div class="sample-card">
-                            <h4>BRCA2 Variants (5 samples)</h4>
-                            <p>BRCA2-specific mutations</p>
-                            <a href="/download-sample/batch_brca2" class="btn-secondary" download>Download</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p>QGene v1.0 | Quantum-Classical Hybrid Machine Learning for Genetic Mutation Prediction</p>
-            <p class="disclaimer">⚠️ For research purposes only. Not for clinical diagnosis.</p>
-        </footer>
+    <div class="sidebar-stats">
+        <p class="stats-label">Dataset</p>
+        <div class="stat-row"><span>Total Variants</span><span class="stat-val">37,362</span></div>
+        <div class="stat-row"><span>BRCA1</span><span class="stat-val">15,476</span></div>
+        <div class="stat-row"><span>BRCA2</span><span class="stat-val">21,886</span></div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <div class="sidebar-models">
+        <p class="stats-label">Model Performance</p>
+        <div class="model-stat">
+            <span class="model-dot classical"></span>
+            <span>Random Forest</span>
+            <span class="stat-val">87.7%</span>
+        </div>
+        <div class="model-stat">
+            <span class="model-dot classical"></span>
+            <span>SVM</span>
+            <span class="stat-val">86.2%</span>
+        </div>
+        <div class="model-stat">
+            <span class="model-dot quantum"></span>
+            <span>QSVM</span>
+            <span class="stat-val">86.0%</span>
+        </div>
+        <div class="model-stat">
+            <span class="model-dot hybrid"></span>
+            <span>Hybrid</span>
+            <span class="stat-val">94.1%</span>
+        </div>
+    </div>
+
+    <div class="sidebar-footer">
+        <p>QGene v1.0</p>
+        <p class="disclaimer">For research purposes only.<br>Not for clinical diagnosis.</p>
+    </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+
+    <!-- Top bar -->
+    <div class="topbar">
+        <div class="topbar-title" id="topbar-title">Single Prediction</div>
+        <div class="topbar-badge">
+            <span class="pulse-dot"></span>
+            Models Active
+        </div>
+    </div>
+
+    <!-- Single Prediction Tab -->
+    <div id="single-tab" class="tab-content active">
+        <div class="page-header">
+            <h1>Variant Pathogenicity Prediction</h1>
+            <p>Enter mutation details to receive a hybrid classical-quantum classification</p>
+        </div>
+
+        <form id="prediction-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="gene">Gene</label>
+                    <select id="gene" name="gene">
+                        <option value="BRCA1">BRCA1</option>
+                        <option value="BRCA2">BRCA2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="position">Genomic Position</label>
+                    <input type="number" id="position" name="position" placeholder="e.g. 5382">
+                    <small>Position in gene sequence</small>
+                </div>
+                <div class="form-group">
+                    <label for="mutation_type">Mutation Type</label>
+                    <select id="mutation_type" name="mutation_type">
+                        <option value="Missense">Missense</option>
+                        <option value="Nonsense">Nonsense</option>
+                        <option value="Frameshift">Frameshift</option>
+                        <option value="Silent">Silent</option>
+                        <option value="Splice Site">Splice Site</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="aa_change">Amino Acid Change</label>
+                    <input type="text" id="aa_change" name="aa_change" placeholder="e.g. C61G">
+                    <small>Format: Original-Position-New</small>
+                </div>
+                <div class="form-group">
+                    <label for="conservation_score">Conservation Score</label>
+                    <input type="number" id="conservation_score" name="conservation_score" step="0.01" min="0" max="1" placeholder="0.85">
+                    <small>0–1 (higher = more conserved)</small>
+                </div>
+                <div class="form-group">
+                    <label for="allele_frequency">Allele Frequency</label>
+                    <input type="number" id="allele_frequency" name="allele_frequency" step="0.0001" min="0" max="1" placeholder="0.0012">
+                    <small>Population frequency (0–1)</small>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="predict-btn">
+                <span id="predict-btn-text">Run Prediction</span>
+                <span id="predict-spinner" class="spinner" style="display:none"></span>
+            </button>
+        </form>
+
+        <!-- Results -->
+        <div id="results" style="display:none">
+
+            <div class="result-hero">
+                <div class="result-verdict" id="result-verdict">
+                    <div class="verdict-label">Classification</div>
+                    <div class="verdict-text" id="prediction-text"></div>
+                    <div class="verdict-confidence">Confidence: <span id="confidence-value"></span></div>
+                </div>
+                <div class="result-gauge">
+                    <svg viewBox="0 0 120 70" class="gauge-svg">
+                        <path d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="#1e2d4a" stroke-width="10" stroke-linecap="round"/>
+                        <path id="gauge-arc" d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="#E0C58F" stroke-width="10" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="157"/>
+                    </svg>
+                    <div class="gauge-label" id="gauge-label">—</div>
+                </div>
+            </div>
+
+            <div class="results-grid">
+                <!-- Classical -->
+                <div class="result-card">
+                    <div class="card-header">
+                        <span class="card-dot classical"></span>
+                        <h3>Classical ML</h3>
+                    </div>
+                    <div class="score-row">
+                        <span>Random Forest</span>
+                        <div class="score-bar-wrap">
+                            <div class="score-bar" id="bar-rf"></div>
+                        </div>
+                        <span class="score-num" id="rf-score"></span>
+                    </div>
+                    <div class="score-row">
+                        <span>SVM</span>
+                        <div class="score-bar-wrap">
+                            <div class="score-bar" id="bar-svm"></div>
+                        </div>
+                        <span class="score-num" id="svm-score"></span>
+                    </div>
+                    <div class="score-row avg-row">
+                        <span>Average</span>
+                        <div class="score-bar-wrap">
+                            <div class="score-bar avg" id="bar-classical-avg"></div>
+                        </div>
+                        <span class="score-num" id="classical-avg"></span>
+                    </div>
+                </div>
+
+                <!-- Quantum -->
+                <div class="result-card">
+                    <div class="card-header">
+                        <span class="card-dot quantum"></span>
+                        <h3>Quantum ML</h3>
+                    </div>
+                    <div class="score-row">
+                        <span>QSVM</span>
+                        <div class="score-bar-wrap">
+                            <div class="score-bar quantum-bar" id="bar-qsvm"></div>
+                        </div>
+                        <span class="score-num" id="qsvm-score"></span>
+                    </div>
+                    <div class="quantum-note">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        ZZFeatureMap · 2 reps · 500 train samples
+                    </div>
+                </div>
+
+                <!-- Hybrid -->
+                <div class="result-card hybrid-card">
+                    <div class="card-header">
+                        <span class="card-dot hybrid"></span>
+                        <h3>Hybrid Ensemble</h3>
+                    </div>
+                    <div class="hybrid-big" id="hybrid-score"></div>
+                    <div class="hybrid-weights">
+                        <div class="weight-pill classical-pill">Classical <span id="w-classical"></span></div>
+                        <div class="weight-sep">+</div>
+                        <div class="weight-pill quantum-pill">Quantum <span id="w-quantum"></span></div>
+                    </div>
+                    <p class="hybrid-note">Weights optimised on validation set</p>
+                </div>
+            </div>
+
+            <!-- SHAP -->
+            <div class="shap-section">
+                <h3>Feature Importance <span class="shap-badge">SHAP</span></h3>
+                <div id="explanation-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Batch Upload Tab -->
+    <div id="batch-tab" class="tab-content">
+        <div class="page-header">
+            <h1>Batch Variant Analysis</h1>
+            <p>Upload a CSV file to classify multiple mutations at once</p>
+        </div>
+
+        <form id="batch-form">
+            <div class="upload-zone" id="file-upload-area">
+                <input type="file" id="csv-file" name="file" accept=".csv">
+                <label for="csv-file">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span class="upload-title">Drop CSV file here or click to browse</span>
+                    <span class="upload-sub">Columns: gene, position, mutation_type, aa_change, conservation_score, allele_frequency</span>
+                    <span class="file-name" id="file-name"></span>
+                </label>
+            </div>
+            <button type="submit" class="btn-primary">Process Batch</button>
+        </form>
+
+        <div id="batch-results" style="display:none">
+            <div class="batch-summary-bar" id="batch-summary"></div>
+            <div class="table-wrap">
+                <table id="batch-table" class="data-table"></table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample Files Tab -->
+    <div id="samples-tab" class="tab-content">
+        <div class="page-header">
+            <h1>Sample Input Files</h1>
+            <p>Download these as starting points or templates for your own data</p>
+        </div>
+        <div class="samples-grid">
+            <div class="sample-card">
+                <div class="sample-tag pathogenic">Pathogenic</div>
+                <h4>Single Pathogenic Example</h4>
+                <p>One known pathogenic BRCA variant</p>
+                <a href="/download-sample/single_pathogenic" class="btn-outline" download>Download CSV</a>
+            </div>
+            <div class="sample-card">
+                <div class="sample-tag benign">Benign</div>
+                <h4>Single Benign Example</h4>
+                <p>One known benign BRCA variant</p>
+                <a href="/download-sample/single_benign" class="btn-outline" download>Download CSV</a>
+            </div>
+            <div class="sample-card">
+                <div class="sample-tag mixed">Mixed</div>
+                <h4>Batch Mixed (10 variants)</h4>
+                <p>Mix of pathogenic and benign mutations</p>
+                <a href="/download-sample/batch_mixed" class="btn-outline" download>Download CSV</a>
+            </div>
+            <div class="sample-card">
+                <div class="sample-tag brca1">BRCA1</div>
+                <h4>BRCA1 Variants (5 samples)</h4>
+                <p>BRCA1-specific mutation set</p>
+                <a href="/download-sample/batch_brca1" class="btn-outline" download>Download CSV</a>
+            </div>
+            <div class="sample-card">
+                <div class="sample-tag brca2">BRCA2</div>
+                <h4>BRCA2 Variants (5 samples)</h4>
+                <p>BRCA2-specific mutation set</p>
+                <a href="/download-sample/batch_brca2" class="btn-outline" download>Download CSV</a>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

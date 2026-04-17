@@ -1,0 +1,67 @@
+<!-- dataset.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QGene — Dataset</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="with-sidebar">
+{% include 'sidebar.html' %}
+<main class="main">
+  <div class="topbar"><span class="topbar-title">Dataset</span><div class="topbar-badge"><span class="pulse-dot"></span>4 Models Active</div></div>
+  <div class="page-content">
+    <div class="page-header"><h1>ClinVar BRCA Dataset</h1><p>37,362 BRCA1 and BRCA2 variants sourced from NCBI ClinVar</p></div>
+
+    <div class="stats-overview">
+      <div class="stat-card"><div class="big-num">37,362</div><div class="big-label">Total Variants</div><div class="big-sub">After quality filtering</div></div>
+      <div class="stat-card"><div class="big-num">15,476</div><div class="big-label">BRCA1 Variants</div><div class="big-sub">41.4% of dataset</div></div>
+      <div class="stat-card"><div class="big-num">21,886</div><div class="big-label">BRCA2 Variants</div><div class="big-sub">58.6% of dataset</div></div>
+      <div class="stat-card"><div class="big-num">48.7 / 51.3</div><div class="big-label">Benign / Pathogenic</div><div class="big-sub">Near-perfect class balance</div></div>
+    </div>
+
+    <div class="section-title">Dataset visualisations</div>
+    <div class="dataset-viz" style="margin-top:16px">
+      <div class="viz-card">
+        <img src="{{ url_for('static', filename='../visualizations/data_exploration.png') }}" alt="Data exploration" onerror="this.style.display='none'">
+        <div class="viz-card-caption">Distribution of variant classes and gene breakdown across the full dataset</div>
+      </div>
+      <div class="viz-card">
+        <img src="{{ url_for('static', filename='../visualizations/detailed_exploration.png') }}" alt="Detailed exploration" onerror="this.style.display='none'">
+        <div class="viz-card-caption">Feature distributions, mutation type frequencies, and position hotspot analysis</div>
+      </div>
+      <div class="viz-card">
+        <img src="{{ url_for('static', filename='../visualizations/pca_projection.png') }}" alt="PCA projection" onerror="this.style.display='none'">
+        <div class="viz-card-caption">PCA projection of 4 features to 2 dimensions — used as input to quantum models</div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:8px">Feature engineering</div>
+    <table class="features-table" style="margin-top:16px">
+      <thead><tr><th>Feature</th><th>Type</th><th>Description</th><th>Range / Values</th></tr></thead>
+      <tbody>
+        <tr><td><span class="feature-name">gene_encoded</span></td><td>Categorical</td><td>Gene identity encoded as binary value</td><td>0 = BRCA1, 1 = BRCA2</td></tr>
+        <tr><td><span class="feature-name">type_encoded</span></td><td>Categorical</td><td>Mutation mechanism encoded via LabelEncoder</td><td>0–4 (SNV, deletion, duplication, insertion, indel)</td></tr>
+        <tr><td><span class="feature-name">start</span></td><td>Numerical</td><td>Genomic start position of the variant</td><td>Chromosomal coordinate (normalised)</td></tr>
+        <tr><td><span class="feature-name">mutation_length</span></td><td>Numerical</td><td>Length of the variant (stop − start)</td><td>1 for SNVs, larger for indels/duplications</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">Data splits</div>
+    <div class="stats-overview" style="grid-template-columns:repeat(3,1fr);margin-top:16px">
+      <div class="stat-card"><div class="big-num">26,153</div><div class="big-label">Training Set</div><div class="big-sub">70% — used to fit models</div></div>
+      <div class="stat-card"><div class="big-num">5,604</div><div class="big-label">Validation Set</div><div class="big-sub">15% — hyperparameter tuning</div></div>
+      <div class="stat-card"><div class="big-num">5,605</div><div class="big-label">Test Set</div><div class="big-sub">15% — final evaluation</div></div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <p style="font-size:13px;color:var(--text-secondary);line-height:1.8">
+        <strong style="color:var(--navy)">Data source:</strong> National Center for Biotechnology Information (NCBI) ClinVar database — <a href="https://www.ncbi.nlm.nih.gov/clinvar/" target="_blank">ncbi.nlm.nih.gov/clinvar</a><br>
+        <strong style="color:var(--navy)">Filtering criteria:</strong> High-confidence pathogenic/benign labels only (reviewed by expert panel or multiple submitters). Variants of uncertain significance (VUS) excluded.<br>
+        <strong style="color:var(--navy)">Preprocessing:</strong> StandardScaler normalisation applied to numerical features. Stratified splits to maintain class balance across all partitions.
+      </p>
+    </div>
+  </div>
+</main>
+</body>
+</html>

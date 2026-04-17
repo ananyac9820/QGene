@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QGene — Contact</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="with-sidebar">
+{% include 'sidebar.html' %}
+<main class="main">
+  <div class="topbar"><span class="topbar-title">Contact</span><div class="topbar-badge"><span class="pulse-dot"></span>4 Models Active</div></div>
+  <div class="page-content">
+    <div class="page-header"><h1>Get in Touch</h1><p>For research collaborations, dataset access, or academic inquiries</p></div>
+
+    <div class="contact-grid">
+      <div class="contact-info-card">
+        <h3>QGene Research Project</h3>
+        <p>QGene is an academic research project exploring hybrid classical-quantum machine learning for genomic variant classification. We welcome collaboration with researchers, clinicians, and institutions working in precision medicine and computational genomics.</p>
+        <div class="contact-detail">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Department of Computer Science
+        </div>
+        <div class="contact-detail">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Pune, Maharashtra, India
+        </div>
+        <div class="contact-detail">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          <a href="https://github.com" target="_blank" style="color:rgba(255,255,255,0.75)">github.com/QGene</a>
+        </div>
+        <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08)">
+          <p style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.7">QGene is an academic prototype. It is not a commercial product and should not be used for clinical diagnosis. All predictions are for research purposes only.</p>
+        </div>
+      </div>
+
+      <div class="contact-form-card">
+        <h3>Send a message</h3>
+        <form id="contact-form" action="https://formspree.io/f/your-form-id" method="POST">
+          <div class="form-row" style="margin-bottom:16px">
+            <div class="form-group"><label>Name</label><input type="text" name="name" placeholder="Your full name" required></div>
+            <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="your@email.com" required></div>
+          </div>
+          <div class="form-group" style="margin-bottom:16px">
+            <label>Institution / Organisation</label>
+            <input type="text" name="institution" placeholder="University, hospital, or company">
+          </div>
+          <div class="form-group" style="margin-bottom:16px">
+            <label>Subject</label>
+            <select name="subject">
+              <option>Research collaboration</option>
+              <option>Dataset access request</option>
+              <option>Academic inquiry</option>
+              <option>Bug report</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:20px">
+            <label>Message</label>
+            <textarea name="message" rows="5" placeholder="Tell us about your inquiry…" style="resize:vertical" required></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;justify-content:center">Send Message</button>
+          <div class="form-success" id="form-success">✓ Message sent successfully. We'll get back to you soon.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+document.getElementById('contact-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  try {
+    const res = await fetch(form.action, { method:'POST', body:data, headers:{'Accept':'application/json'} });
+    if (res.ok) {
+      document.getElementById('form-success').style.display = 'block';
+      form.reset();
+    }
+  } catch(err) {
+    document.getElementById('form-success').style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>
