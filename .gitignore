@@ -11,12 +11,12 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Large data files
-data/*.npy
+
 data/brca_mutations.csv
 qgene.zip
 
 # Trained model binaries (too large for GitHub)
-models/*.pkl
+
 
 # OS
 .DS_Store
