@@ -1,133 +1,147 @@
-QGene – Hybrid Classical-Quantum Machine Learning for BRCA Variant Classification
-📌 Project Overview
-QGene is a hybrid machine learning system designed to classify BRCA1 and BRCA2 gene mutations as:
+QGene — Quantum-Classical Hybrid BRCA Variant Classifier
 
-Benign (Harmless)
-Pathogenic (Disease-causing)
+A hybrid classical-quantum machine learning system for BRCA1/BRCA2 genetic mutation pathogenicity prediction, with explainability, comparative analysis, and a full web interface.
 
-The system combines:
+🔬 Live Demo: qgene.onrender.com
 
-Classical Machine Learning (Random Forest, SVM)
-Quantum Machine Learning (VQC, QSVM using Qiskit)
-Hybrid Ensemble Modeling
-Explainability (SHAP)
+Overview
+QGene is a research-grade prototype that classifies BRCA1 and BRCA2 gene variants as Pathogenic or Benign using a hybrid ensemble of classical and quantum machine learning models. It is built on 37,362 ClinVar variants and combines Random Forest, SVM, Quantum SVM (via ZZFeatureMap kernel), and a learned-weight hybrid ensemble.
+The system includes SHAP-based explainability, a comparative analysis of classical vs quantum approaches, and a full web application with PDF report generation.
 
-The final goal is to build a research-grade prototype with a web interface for mutation prediction.
+Key Results
+ModelAccuracyF1-ScoreROC-AUCTraining SamplesRandom Forest87.71%87.13%92.73%26,153SVM86.23%85.38%86.60%26,153QSVM (ZZFeatureMap)86.00%85.17%86.02%500VQC78.20%75.51%84.74%200Hybrid Ensemble ★86.60%86.01%94.12%Ensemble
+Key finding: QSVM achieves statistically equivalent performance to classical SVM while using 52× fewer training samples, demonstrating quantum kernel efficiency in the low-data regime. The hybrid ensemble outperforms all individual models on ROC-AUC (94.12%).
 
-🎯 Current Status: Week 3 Complete ✅
-Timeline: 8-week project
-Progress: 3/8 weeks completed (37.5%)
-Status: ON SCHEDULE
+Features
 
-📊 Week 1 Progress (Completed ✅)
-Data Acquisition & Exploration
-✅ Environment setup (Python 3.12.7 + Anaconda + VS Code)
-✅ Installed required ML & Quantum libraries (scikit-learn, qiskit, shap, pandas, numpy, flask)
-✅ Downloaded ClinVar dataset from NCBI
-✅ Filtered BRCA1 & BRCA2 variants
-✅ Cleaned dataset: 37,362 variants
-✅ Created binary classification labels (0=Benign, 1=Pathogenic)
-✅ Performed comprehensive exploratory data analysis
-✅ Generated 9 detailed visualizations
-Dataset Characteristics:
-
-Total Variants: 37,362
-BRCA1: 15,476 variants (41.4%)
-BRCA2: 21,886 variants (58.6%)
-Class Balance: 48.7% benign, 51.3% pathogenic (excellent balance!)
-Data Quality: Zero missing values
-Most Common Type: Single nucleotide variant (21,247 occurrences)
+4 ML models — Random Forest, SVM, QSVM, VQC
+Quantum kernel — ZZFeatureMap with entanglement (2 reps, Qiskit 2.3)
+Hybrid ensemble — weights optimised on validation set
+SHAP explainability — feature-level contributions for every prediction
+Statistical validation — McNemar's test, learning curves, ROC overlay
+PDF report generation — downloadable per-prediction report (jsPDF)
+Batch prediction — CSV upload for multiple variants
+7-page web application — landing, predict, disease info, dataset, stats, news, contact
 
 
-🔧 Week 2 Progress (Completed ✅)
-Feature Engineering & Data Preprocessing
-✅ Converted categorical features to numerical encodings
-✅ Engineered biologically meaningful features:
+Project Structure
+QGene/
+├── qgene_app.py                  # Flask backend — all routes and prediction logic
+├── requirements.txt              # Python dependencies
+├── render.yaml                   # Render.com deployment config
+│
+├── notebooks/
+│   ├── 01_data_exploration.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_classical_ml_training.ipynb
+│   ├── 04_quantum_ml_training.ipynb
+│   └── 05_comparison_analysis.ipynb
+│
+├── models/                       # Trained model files (Git LFS)
+│   ├── random_forest_model.pkl
+│   ├── svm_model.pkl
+│   ├── qsvm_upgraded.pkl
+│   ├── quantum_kernel_zz.pkl
+│   ├── pca_transformer.pkl
+│   └── hybrid_config.pkl
+│
+├── data/                         # Preprocessed arrays (Git LFS)
+│   ├── X_train.npy / y_train.npy
+│   ├── X_val.npy   / y_val.npy
+│   ├── X_test.npy  / y_test.npy
+│   └── X_qsvm_test.npy + prediction arrays
+│
+├── visualizations/               # Publication figures
+│   ├── fig1_performance_comparison.png
+│   ├── fig2_roc_curves.png
+│   ├── fig3_confusion_matrices.png
+│   ├── fig4_quantum_advantage.png   ← key finding
+│   ├── fig5_kernel_heatmap.png
+│   └── fig6_summary.png
+│
+├── templates/                    # Flask HTML templates
+│   ├── landing.html
+│   ├── app.html
+│   ├── sidebar.html
+│   ├── about.html
+│   ├── dataset.html
+│   ├── stats.html
+│   ├── news.html
+│   └── contact.html
+│
+└── static/
+    ├── css/style.css
+    └── js/script.js
 
-Gene encoding (BRCA1=0, BRCA2=1)
-Mutation type encoding (LabelEncoder)
-Mutation length calculation (Stop - Start)
-Genomic position (Start coordinate)
+Setup & Installation
+Prerequisites
 
-✅ Created ML-ready feature matrix with 4 features:
+Python 3.12.7
+Anaconda or virtualenv
 
-Gene_encoded: Gene identity
-Type_encoded: Mutation mechanism
-Start: Genomic position hotspot information
-Mutation_length: Structural severity
+1. Clone the repository
+bashgit clone https://github.com/ananyac9820/QGene.git
+cd QGene
+2. Create and activate virtual environment
+bashpython -m venv .venv
+# Windows
+.venv\Scripts\activate
+# macOS/Linux
+source .venv/bin/activate
+3. Install dependencies
+bashpip install -r requirements.txt
+4. Run the application
+bashpython qgene_app.py
+Visit http://localhost:5000
 
-✅ Applied stratified train/validation/test split:
+Quantum Implementation
+The quantum component uses Qiskit 2.3 with qiskit-machine-learning 0.9.0.
+QSVM architecture:
 
-Training: 26,153 samples (70%)
-Validation: 5,604 samples (15%)
-Test: 5,605 samples (15%)
+Feature reduction: PCA (4D → 2D, 70.5% variance retained)
+Feature map: ZZFeatureMap (2 qubits, 2 reps) — captures qubit entanglement
+Kernel: FidelityQuantumKernel via StatevectorSampler
+Classifier: SVC with precomputed kernel matrix
+Training set: 500 stratified samples
 
-✅ Applied StandardScaler normalization (mean≈0, std=1)
-✅ Verified class balance maintained across all splits
-✅ Saved preprocessed arrays (.npy format) for reproducibility
+VQC architecture:
 
-🤖 Week 3 Progress (Completed ✅)
-Classical Machine Learning Model Training
-✅ Trained Random Forest Classifier (100 trees, max_depth=20)
-✅ Trained Support Vector Machine (RBF kernel, C=1.0)
-✅ Comprehensive model evaluation with multiple metrics
-✅ Created performance visualization suite
-✅ Saved trained models (.pkl format)
-📊 Final Test Set Performance
-🌲 Random Forest (BEST MODEL 🏆)
+Feature map: ZZFeatureMap (2 reps)
+Ansatz: RealAmplitudes (2 reps)
+Optimizer: COBYLA (150 iterations)
+Training set: 200 stratified samples
 
-Accuracy: 87.71%
-Precision: 94.03%
-Recall: 81.18%
-F1-Score: 87.13%
-ROC-AUC: 92.73%
 
-🎯 Support Vector Machine (SVM)
+Important: Quantum models must be run in the .venv kernel (not Anaconda base), as qiskit-machine-learning is installed there.
 
-Accuracy: 86.23%
-Precision: 93.65%
-Recall: 78.46%
-F1-Score: 85.38%
-ROC-AUC: 86.60%
 
-Key Findings:
+Dataset
 
-Both models exceed 85% accuracy threshold ✅
-Random Forest outperforms SVM across all metrics
-High precision (>93%) indicates low false positive rate
-Models ready for comparison with quantum approaches
+Source: NCBI ClinVar — ncbi.nlm.nih.gov/clinvar
+Genes: BRCA1 (15,476 variants) and BRCA2 (21,886 variants)
+Total variants: 37,362 (after quality filtering)
+Class balance: 48.7% Benign / 51.3% Pathogenic
+Features: gene, mutation type, genomic position, mutation length
 
-🛠️ Technologies Used
-Machine Learning & Data Science
 
-Python 3.12.7 (Anaconda distribution)
-scikit-learn – Classical ML algorithms
-pandas – Data manipulation
-numpy – Numerical computing
-matplotlib & seaborn – Data visualization
+8-Week Development Timeline
+WeekMilestoneStatus1Data acquisition & exploration✅2Feature engineering & preprocessing✅3Classical ML (RF, SVM, SHAP)✅4Quantum ML setup (QSVM, VQC)✅5Comparison analysis & hybrid ensemble✅6Web application development✅7Deployment (Render.com)✅8Documentation & presentation🔄
 
-Quantum Computing (Upcoming Week 4-5)
+Technologies
+CategoryToolsClassical MLscikit-learn 1.8, NumPy, pandasQuantum MLQiskit 2.3, qiskit-machine-learning 0.9.0, qiskit-aer 0.17.2ExplainabilitySHAP 0.45.1WebFlask, jsPDFVisualisationmatplotlib, seabornDeploymentRender.com, Git LFSVersion controlGitHub
 
-Qiskit 2.3.0 – IBM Quantum framework
-qiskit-machine-learning – Quantum ML algorithms
+Limitations & Future Work
 
-Explainability & Web (Upcoming)
+Quantum models trained on small subsets (500/200 samples) due to simulation cost — real quantum hardware would allow larger training sets
+VQC optimizer (COBYLA) converged early; future work could explore SPSA or gradient-based optimizers
+Feature set limited to 4 engineered features; incorporating conservation scores and allele frequency may improve performance
+Extension to other BRCA-related genes (PALB2, CHEK2, ATM) is a natural next step
 
-SHAP – Model interpretability
-Flask – Web application framework
 
-Development Tools
+Disclaimer
+⚠️ QGene is an academic research prototype. Predictions are generated by machine learning models and have not been clinically validated. This tool is intended for research and educational purposes only and should never be used as the basis for any medical or clinical decision. Always consult a qualified healthcare professional or genetic counselor.
 
-VS Code – IDE with Jupyter extension
-Git/GitHub – Version control
-Jupyter Notebooks – Interactive development
+Authors
+Ananya Choudhari
 
-📊 Performance Metrics Explained
-
-Accuracy: Overall correctness (correctly classified / total samples)
-Precision: Of predicted pathogenic, how many are truly pathogenic (minimizes false alarms)
-Recall (Sensitivity): Of actual pathogenic, how many were detected (minimizes missed cases)
-F1-Score: Harmonic mean of precision and recall (balanced metric)
-ROC-AUC: Area under receiver operating characteristic curve (discrimination ability)
-
-Medical Context: High precision is critical to avoid unnecessary patient anxiety from false positives, while high recall ensures dangerous mutations aren't missed
+Built with Qiskit · scikit-learn · Flask · ClinVar data
