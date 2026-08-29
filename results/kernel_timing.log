@@ -1,0 +1,5 @@
+timing FidelityQuantumKernel.evaluate on 500x500 (124,750 unique pairs)...
+wall-clock: 1008.6s = 00:16 (hh:mm)
+per-pair  : 8.085 ms
+K shape (500, 500), symmetric True, diag~1 True
+wrote results/kernel_timing.json

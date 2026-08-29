@@ -1,0 +1,43 @@
+{
+  "ablation": {
+    "dropped": [
+      "review_score",
+      "is_expert"
+    ],
+    "full": {
+      "acc": 0.876669009135629,
+      "f1": 0.8810572687224669,
+      "auc": 0.9456536846254784,
+      "n_features": 14
+    },
+    "ablated": {
+      "acc": 0.8780744905130007,
+      "f1": 0.8820931022765885,
+      "auc": 0.9488812652927376,
+      "n_features": 12
+    },
+    "delta_acc_points": 0.14054813773717312
+  },
+  "env": {
+    "libraries": {
+      "Flask": "3.1.3",
+      "numpy": "2.4.6",
+      "pandas": "3.0.1",
+      "qiskit": "1.2.4",
+      "qiskit-aer": "0.17.2",
+      "qiskit-machine-learning": "0.7.2",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.1",
+      "shap": "0.51.0"
+    },
+    "python": "3.13.5",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "hardware": {
+      "physical_cores": 14,
+      "logical_cores": 18,
+      "ram_gb": 15.61,
+      "cpu": "Intel(R) Core(TM) Ultra 5 125H"
+    },
+    "seed": 42
+  }
+}
