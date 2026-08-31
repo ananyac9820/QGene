@@ -1,0 +1,90 @@
+{
+  "ranked": [
+    {
+      "rank": 1,
+      "feature": "is_snv",
+      "mean_abs_shap": 0.12476521762389126,
+      "pct_of_total": 22.472869527860304
+    },
+    {
+      "rank": 2,
+      "feature": "type_enc",
+      "mean_abs_shap": 0.10720276334385853,
+      "pct_of_total": 19.309497947697963
+    },
+    {
+      "rank": 3,
+      "feature": "is_frameshift",
+      "mean_abs_shap": 0.052779498413294226,
+      "pct_of_total": 9.506710317000591
+    },
+    {
+      "rank": 4,
+      "feature": "has_protein_change",
+      "mean_abs_shap": 0.04280016991001838,
+      "pct_of_total": 7.709220987035032
+    },
+    {
+      "rank": 5,
+      "feature": "aa_position",
+      "mean_abs_shap": 0.03677375473147915,
+      "pct_of_total": 6.6237354277801295
+    },
+    {
+      "rank": 6,
+      "feature": "nuc_position",
+      "mean_abs_shap": 0.02749687079255705,
+      "pct_of_total": 4.952771305287568
+    },
+    {
+      "rank": 7,
+      "feature": "review_score",
+      "mean_abs_shap": 0.027014639090919182,
+      "pct_of_total": 4.865911118454289
+    },
+    {
+      "rank": 8,
+      "feature": "position",
+      "mean_abs_shap": 0.026250320643404507,
+      "pct_of_total": 4.728241108528021
+    },
+    {
+      "rank": 9,
+      "feature": "nuc_x_review",
+      "mean_abs_shap": 0.025013219421728454,
+      "pct_of_total": 4.505412864591557
+    },
+    {
+      "rank": 10,
+      "feature": "type_x_gene",
+      "mean_abs_shap": 0.024984761780330163,
+      "pct_of_total": 4.500287038063988
+    },
+    {
+      "rank": 11,
+      "feature": "is_expert",
+      "mean_abs_shap": 0.01847879965382131,
+      "pct_of_total": 3.32842487321784
+    },
+    {
+      "rank": 12,
+      "feature": "log_length",
+      "mean_abs_shap": 0.015793037471026658,
+      "pct_of_total": 2.844661976264035
+    },
+    {
+      "rank": 13,
+      "feature": "aa_x_gene",
+      "mean_abs_shap": 0.01519777650083409,
+      "pct_of_total": 2.7374428139611955
+    },
+    {
+      "rank": 14,
+      "feature": "gene_enc",
+      "mean_abs_shap": 0.010630686135201873,
+      "pct_of_total": 1.914812694257489
+    }
+  ],
+  "n_rows": 2846,
+  "seed": 42
+}
